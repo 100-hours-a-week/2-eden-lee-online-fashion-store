@@ -21,7 +21,7 @@ public class OnlineStoreApplication {
         this.cart = new ArrayList<>();
     }
 
-    private int displayMainMenu(TimeOutThread timer) {
+    private int displayMainMenu() {
         System.out.println("===========================================");
         System.out.println("  어서오세요! 매일 특별한 당신을 위한 패션 쇼핑몰");
         System.out.println("            " + this.name +" 입니다 💝\n");
@@ -32,6 +32,9 @@ public class OnlineStoreApplication {
         System.out.print("원하는 번호를 입력해주세요> ");
 
         while(true) {
+            Thread thisThread = Thread.currentThread();
+            TimeOutThread timer = new TimeOutThread(timeout, thisThread);
+
             timer.start();
             int choice = this.scanner.nextInt();
             timer.stopTimer();
@@ -47,7 +50,7 @@ public class OnlineStoreApplication {
 
     }
 
-    private void displayProductMenu(TimeOutThread timer) {
+    private void displayProductMenu() {
         // TODO: 출력과 관련된 view 클래스 생성
         System.out.println("\n어떤 종류의 상품을 구경하시겠습니까?");
         System.out.println("1. 의류 (상/하의)");
@@ -56,12 +59,15 @@ public class OnlineStoreApplication {
         System.out.print("> ");
 
         while(true) {
+            Thread thisThread = Thread.currentThread();
+            TimeOutThread timer = new TimeOutThread(timeout, thisThread);
+
             timer.start();
             int choice = this.scanner.nextInt();
             timer.stopTimer();
 
             if(choice == 1 || choice == 2) {
-                displayProductChoice(choice, timer);
+                displayProductChoice(choice);
                 break;
             }
             else if(choice == 3) {
@@ -74,7 +80,7 @@ public class OnlineStoreApplication {
         }
     }
 
-    private void displayProductChoice(int productType, TimeOutThread timer) {
+    private void displayProductChoice(int productType) {
         List<Integer> productIds = new ArrayList<>();
 
         if(productType == 1) {
@@ -89,6 +95,9 @@ public class OnlineStoreApplication {
         // 제품번호 선택
         int productId;
         while (true) {
+            Thread thisThread = Thread.currentThread();
+            TimeOutThread timer = new TimeOutThread(timeout, thisThread);
+
             System.out.print("원하는 제품번호를 입력해주세요> ");
             timer.start();
             productId = scanner.nextInt();
@@ -109,18 +118,23 @@ public class OnlineStoreApplication {
 
         int choice;
         while(true) {
+            Thread thisThread = Thread.currentThread();
+            TimeOutThread timer1 = new TimeOutThread(timeout, thisThread);
+
             System.out.print("원하는 번호를 입력해주세요> ");
-            timer.start();
+            timer1.start();
             choice = scanner.nextInt();
-            timer.stopTimer();
+            timer1.stopTimer();
             if(choice == 1) {
                 stocks.printProductDetails(productId);
             }
             else if(choice == 2) {
+                TimeOutThread timer2 = new TimeOutThread(timeout, thisThread);
+
                 System.out.print("구매하실 수량을 입력해주세요> ");
-                timer.start();
+                timer2.start();
                 int quantity = scanner.nextInt();
-                timer.stopTimer();
+                timer2.stopTimer();
 
                 if(addToCart(product, quantity)) {
                     break;
@@ -133,7 +147,7 @@ public class OnlineStoreApplication {
                 System.out.println("올바른 메뉴번호를 입력해주세요!\n");
             }
         }
-        displayCart(timer);
+        displayCart();
     }
 
     private boolean addToCart(Product product, int quantity) {
@@ -145,7 +159,7 @@ public class OnlineStoreApplication {
         return false;
     }
 
-    private void displayCart(TimeOutThread timer) {
+    private void displayCart() {
         int totalCount = cart.size();
         int totalPrice = 0;
 
@@ -159,17 +173,24 @@ public class OnlineStoreApplication {
         System.out.println("총 금액:                 " + totalPrice + "원\n");
 
         if(totalCount != 0) {
+            Thread thisThread = Thread.currentThread();
+            TimeOutThread timer = new TimeOutThread(timeout, thisThread);
+
             timer.start();
             System.out.print("결제하시겠습니까? (Y/N)> ");
             String answer = scanner.next();
             timer.stopTimer();
+
             if(answer.equalsIgnoreCase("y")) {
-                purchase(totalPrice, timer);
+                purchase(totalPrice);
             }
         }
     }
 
-    private void purchase(int totalPrice, TimeOutThread timer) {
+    private void purchase(int totalPrice) {
+        Thread thisThread = Thread.currentThread();
+        TimeOutThread timer = new TimeOutThread(timeout, thisThread);
+
         timer.start();
         System.out.print("지불하실 금액을 입력해주세요. (숫자만 입력)> ");
         int payment = scanner.nextInt();
@@ -211,17 +232,14 @@ public class OnlineStoreApplication {
     }
 
     public void start(){
-        Thread thisThread = Thread.currentThread();
-        TimeOutThread timer = new TimeOutThread(timeout, thisThread);
-
         // 메인화면 접속
         while (true) {
-            int choice = displayMainMenu(timer);
+            int choice = displayMainMenu();
             if(choice == 1){
-                displayProductMenu(timer);
+                displayProductMenu();
             }
             else if(choice == 2){
-                displayCart(timer);
+                displayCart();
             }
             else if(choice == 3){
                 exit();

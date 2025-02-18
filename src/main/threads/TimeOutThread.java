@@ -15,7 +15,7 @@ public class TimeOutThread extends Thread{
             System.out.println("\n"+ timeout + "초 간 응답이 없어 프로그램이 종료됩니다.");
             targetThread.interrupt();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
